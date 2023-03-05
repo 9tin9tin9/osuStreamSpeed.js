@@ -56,6 +56,8 @@ function beginTest() {
     beginTime = -1;
     key1 = $('#key1').val();
     key2 = $('#key2').val();
+    key3 = $('#key3').val();
+    key4 = $('#key4').val();
     mouse = $("input[name='cmouse']").prop("checked");
     $("div#status").html("Test ready, press key 1 or key 2 to begin.");
     $("div#Result").html("\
@@ -67,6 +69,8 @@ function beginTest() {
     localStorage.setItem('timeLimit', timeLimit);
     localStorage.setItem('key1', key1);
     localStorage.setItem('key2', key2);
+    localStorage.setItem('key3', key3);
+    localStorage.setItem('key4', key4);
     localStorage.setItem('mouse', mouse);
     std = 0;
     $("button#submit").hide();
@@ -176,33 +180,33 @@ $(document).keypress(function(event)
         beginTest();
     if (testrunning == true) // if (true == true)
     {
-        //if (String.fromCharCode(event.which) == key1 || String.fromCharCode(event.which) == key2)
-        //{
-            if ((String.fromCharCode(event.which) == key1) || (String.fromCharCode(event.which) == key2)) // Any reason there are two of these? Removed one...
+        if ((String.fromCharCode(event.which) == key1) ||
+            (String.fromCharCode(event.which) == key2) ||
+            (String.fromCharCode(event.which) == key3) ||
+            (String.fromCharCode(event.which) == key4))
+        {
+            switch (beginTime)
             {
-                switch (beginTime)
-                {
-                    case -1:
-                        beginTime = Date.now();
-                        $("div#status").html("Test currently running.");
-			updater = setInterval(function() { update(false); }, 16.6);
-						
-			if ($("input[name='roption']:checked").val() == "time") {
-				endTimer = setTimeout(function() {
-					endTest();
-				}, timeLimit * 1000);
-			}
-                    default:
-                        update(true);
-                        break;
-                }
-                if ((clickTimes.length == clickLimit) && ($("input[name='roption']:checked").val() == "clicks"))
-                {
-                    endTest();
-		    return;
-                }
+                case -1:
+                    beginTime = Date.now();
+                    $("div#status").html("Test currently running.");
+        updater = setInterval(function() { update(false); }, 16.6);
+                    
+        if ($("input[name='roption']:checked").val() == "time") {
+            endTimer = setTimeout(function() {
+                endTest();
+            }, timeLimit * 1000);
+        }
+                default:
+                    update(true);
+                    break;
             }
-        //}
+            if ((clickTimes.length == clickLimit) && ($("input[name='roption']:checked").val() == "clicks"))
+            {
+                endTest();
+        return;
+            }
+        }
     }
 });
 
@@ -216,33 +220,30 @@ $(document).mousedown(function(event)
             beginTest();
         if (testrunning == true) // if (true == true)
         {
-            //if (String.fromCharCode(event.which) == key1 || String.fromCharCode(event.which) == key2)
-            //{
-                if ((event.which) == 1 || (event.which) == 3) // Any reason there are two of these? Removed one...
+            if ((event.which) == 1 || (event.which) == 3) // Any reason there are two of these? Removed one...
+            {
+                switch (beginTime)
                 {
-                    switch (beginTime)
-                    {
-                        case -1:
-                            beginTime = Date.now();
-                            $("div#status").html("Test currently running.");
-                updater = setInterval(function() { update(false); }, 16.6);
+                    case -1:
+                        beginTime = Date.now();
+                        $("div#status").html("Test currently running.");
+            updater = setInterval(function() { update(false); }, 16.6);
 
-                if ($("input[name='roption']:checked").val() == "time") {
-                    endTimer = setTimeout(function() {
-                        endTest();
-                    }, timeLimit * 1000);
+            if ($("input[name='roption']:checked").val() == "time") {
+                endTimer = setTimeout(function() {
+                    endTest();
+                }, timeLimit * 1000);
+            }
+                    default:
+                        update(true);
+                        break;
                 }
-                        default:
-                            update(true);
-                            break;
-                    }
-                    if ((clickTimes.length == clickLimit) && ($("input[name='roption']:checked").val() == "clicks"))
-                    {
-                        endTest();
-                return;
-                    }
+                if ((clickTimes.length == clickLimit) && ($("input[name='roption']:checked").val() == "clicks"))
+                {
+                    endTest();
+            return;
                 }
-            //}
+            }
         }
     }
     else
@@ -272,6 +273,14 @@ $(document).ready(function() {
         $("input#key2").val("x");
     else
         $("input#key2").val(localStorage.getItem('key2'));
+    if(!localStorage.getItem('key3'))
+        $("input#key3").val("n");
+    else
+        $("input#key3").val(localStorage.getItem('key3'));
+    if(!localStorage.getItem('key4'))
+        $("input#key4").val("m");
+    else
+        $("input#key4").val(localStorage.getItem('key4'));
     if(!localStorage.getItem('timeLimit'))
         $("input#clickTime").val("10");
     else
